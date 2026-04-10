@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [1.1.0](https://github.com/woliveiras/copilot-configs/compare/v1.0.0...v1.1.0) (2026-04-10)
+
+
+### Features
+
+* update CI and release workflows to ignore specific paths on push ([79dff1e](https://github.com/woliveiras/copilot-configs/commit/79dff1e0a5a697cd708ab3beb9299e7c7f9fae32))
+
 ## 1.0.0 (2026-04-10)
 
 
