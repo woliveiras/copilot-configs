@@ -50,8 +50,10 @@ while IFS= read -r line; do
   [[ "$line" =~ ^[[:space:]]*$ ]] && continue
 
   # Parse action and pattern
-  ACTION=$(echo "$line" | awk '{print $1}')
-  PATTERN=$(echo "$line" | sed 's/^[[:space:]]*[A-Z]*[[:space:]]*//')
+  ACTION="${line%%[[:space:]]*}"
+  PATTERN="${line#*[[:space:]]}"
+  # Trim leading whitespace from pattern
+  PATTERN="${PATTERN#"${PATTERN%%[![:space:]]*}"}"
 
   # Skip malformed lines
   [[ -z "$ACTION" || -z "$PATTERN" ]] && continue

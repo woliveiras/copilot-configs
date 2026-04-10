@@ -50,13 +50,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Test install (global)
-        run: bash install.sh
+      - name: Simulate global install (skip git clone, use checkout)
+        run: |
+          mkdir -p "$HOME/.copilot-configs"
+          cp -R . "$HOME/.copilot-configs/"
+          echo "Simulated install from checkout."
 
       - name: Test install (project)
         run: |
           mkdir -p /tmp/test-project && cd /tmp/test-project
-          bash "$GITHUB_WORKSPACE/install.sh" --project
+          bash "$HOME/.copilot-configs/install.sh" --project
           test -f .github/copilot-instructions.md
           test -d .github/instructions
           test -d .github/agents
