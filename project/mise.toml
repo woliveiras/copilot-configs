@@ -1,0 +1,26 @@
+# mise.toml — Tool version manager configuration
+# Uncomment the tools your project uses.
+# Docs: https://mise.jdx.dev/configuration.html
+#
+# Run `mise install` to install all configured tools.
+
+[tools]
+# Go
+# go = "1.26"
+
+# Node.js
+# node = "24"
+# pnpm = "10"
+
+# Python
+# python = "3.14"
+# uv = "latest"
+
+# Java / Kotlin
+# java = "temurin-25"
+
+# Terraform
+# terraform = "1.14"
+
+[env]
+# PROJECT_NAME = "my-project"
