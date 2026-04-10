@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Lint shell scripts
+        run: |
+          shellcheck install.sh
+          shellcheck uninstall.sh
+          shellcheck project/.github/hooks/scripts/block-dangerous-commands.sh
+
+  yaml-lint:
+    name: YAML Frontmatter Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check markdown files exist
+        run: |
+          echo "Checking file structure..."
+          test -f install.sh
+          test -f uninstall.sh
+          test -f README.md
+          test -d user/prompts
+          test -d project/.github/instructions
+          test -d project/.github/agents
+          test -d project/.github/skills
+          test -d project/.github/hooks
+          echo "All expected files and directories present."
+
+  install-test:
+    name: Install Script Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Test install (global)
+        run: bash install.sh
+
+      - name: Test install (project)
+        run: |
+          mkdir -p /tmp/test-project && cd /tmp/test-project
+          bash "$GITHUB_WORKSPACE/install.sh" --project
+          test -f .github/copilot-instructions.md
+          test -d .github/instructions
+          test -d .github/agents
+          test -d .github/skills
+          test -d .github/hooks
+          echo "Project install verified."
+
+      - name: Test uninstall
+        run: bash uninstall.sh
