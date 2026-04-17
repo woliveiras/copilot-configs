@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [1.2.0](https://github.com/woliveiras/copilot-configs/compare/v1.1.0...v1.2.0) (2026-04-17)
+
+
+### Features
+
+* add comprehensive Docker instructions for best practices and security ([da5949f](https://github.com/woliveiras/copilot-configs/commit/da5949f1413a2d004968c6a1480b7f3f0e925644))
+* add comprehensive SQLite best practices and guidelines for schema design, migrations, and performance optimization ([cd820da](https://github.com/woliveiras/copilot-configs/commit/cd820da2f2bc2510d070e8f49aa0edc7a3781dbe))
+* add Tailwind CSS v4 conventions and patterns documentation ([2845238](https://github.com/woliveiras/copilot-configs/commit/2845238d90c89472c88bdaed7cd8153dc3ee2957))
+* add XState v5 conventions and guidelines for state machines, testing, and React integration ([06debd8](https://github.com/woliveiras/copilot-configs/commit/06debd842f4e830b1f3f58b78fa35c7da9ca7265))
+* add Zod v4 conventions and guidelines for schema definition, validation patterns, and runtime validation ([a4cd2f8](https://github.com/woliveiras/copilot-configs/commit/a4cd2f898ac0c4fd033131774ea582b4ef2924ce))
+* add Zustand v5 conventions and guidelines for store structure, middleware, mutations, persistence, and selectors ([7652540](https://github.com/woliveiras/copilot-configs/commit/7652540bfbc5cf8d52ad694d0ac567193e47b410))
+* enhance Go code quality guidelines with detailed sections on concurrency, structs, functions, performance, testing, linting, and anti-patterns ([9cd86ad](https://github.com/woliveiras/copilot-configs/commit/9cd86ad92420975b1a6d7713af2d2240dabc4ec5))
+
 ## [1.1.0](https://github.com/woliveiras/copilot-configs/compare/v1.0.0...v1.1.0) (2026-04-10)
 
 
