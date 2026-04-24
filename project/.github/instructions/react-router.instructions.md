@@ -42,28 +42,15 @@ export default function BookPage({ loaderData }: Route.ComponentProps) { ... }
 
 Never manually type loader data — typegen infers it from the loader return.
 
-## Breaking Changes from v6
+## Imports
 
-### Import from `react-router`, not `react-router-dom`
+All imports come from `react-router` (not `react-router-dom`):
 
 ```ts
-// ✅ v7
 import { Link, useNavigate, Form } from "react-router"
-
-// ❌ v6 (deprecated)
-import { Link } from "react-router-dom"
 ```
 
-### Removed APIs
-
-| v6 | v7 |
-|---|---|
-| `json()` helper | Return plain objects from loaders |
-| `defer()` | Use native promises and `<Awaited>` |
-| `<BrowserRouter>` (classic mode) | Framework mode with file-based routes |
-| `useLoaderData()` hook | `loaderData` prop on component |
-
-### File-Based Routing
+## File-Based Routing
 
 Routes are defined by file structure in `app/routes/`:
 
@@ -115,3 +102,5 @@ export function ErrorBoundary() {
 - `<NavLink>` for active state styling
 - `useNavigate()` for programmatic navigation
 - Prefer `<Link>` over `useNavigate()` when possible
+
+For migrating from v6, use the `react-router-migration` skill.
