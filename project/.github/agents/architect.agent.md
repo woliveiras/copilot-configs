@@ -69,9 +69,14 @@ hybrid. The user wants a strong read, not a menu.
 Apply [interface-design](./references/interface-design.md) and
 [pragmatic-heuristics](./references/pragmatic-heuristics.md) to evaluate.
 
-### 6. Write RFC
+### 6. Write RFC or ADR
 
-Save the RFC to `docs/rfcs/<topic>.md` using the `rfc-template` skill format. For quick RFC generation without full analysis, use the `rfc-template` skill directly.
+Ask the user which format they prefer:
+
+- **RFC** → Save to `docs/rfcs/<topic>.md` using the `rfc-template` skill format
+- **ADR (MADR)** → Save to `docs/decisions/NNNN-title.md` using the `adr-template` skill format
+
+Default to RFC for proposals that need review. Use ADR for decisions already agreed upon.
 
 ## Rules
 

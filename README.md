@@ -14,7 +14,7 @@ Every project needs the same Copilot setup: language-specific instructions, code
 
 - **8 instruction files** covering Go, TypeScript, Python, Kotlin, React, Astro/MDX, testing, and security
 - **4 agents** for spec-driven development: write specs → generate tests → implement code → update docs
-- **8 skills** with templates for specs, tests, docs, migrations, validation patterns, and conventional commits
+- **9 skills** with templates for specs, tests, docs, migrations, ADRs, validation patterns, and conventional commits
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
 - **3 global prompts** for code review, refactoring, and test generation
 
@@ -29,7 +29,7 @@ copilot-configs/
         ├── instructions/              # 9 language & convention files
         ├── agents/                    # 4 agents + 6 design references
         │   └── references/            # Deep modules, interface design, etc.
-        ├── skills/                    # 8 skills with asset templates
+        ├── skills/                    # 9 skills with asset templates
         └── hooks/                     # Command guardrails (BLOCK/ASK rules)
 ```
 
@@ -127,6 +127,7 @@ There are three review surfaces — each for a different context:
 | `conventional-commit` | Write commit messages in Conventional Commits format |
 | `glossary` | Extract domain terminology into `GLOSSARY.md` |
 | `rfc-template` | Generate a structured RFC for architecture decisions |
+| `adr-template` | Record an Architectural Decision in MADR 4.0 format |
 | `zod-patterns` | Zod validation recipes (API clients, forms, localStorage) |
 | `react-router-migration` | Step-by-step guide for React Router v6 → v7 migration |
 
