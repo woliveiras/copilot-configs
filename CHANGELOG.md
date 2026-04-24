@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [1.3.0](https://github.com/woliveiras/copilot-configs/compare/v1.2.0...v1.3.0) (2026-04-24)
+
+
+### Features
+
+* add ADR template skill for documenting architectural decisions ([14a12e2](https://github.com/woliveiras/copilot-configs/commit/14a12e27c75d004dd2eb8d8ac4234b5110f1a4b5))
+* add comprehensive guidelines for React Router v7 in framework mode ([2ce2b20](https://github.com/woliveiras/copilot-configs/commit/2ce2b205fba7bf4aaf4964ac5d948ca1574bcd1c))
+* add detailed instructions for XState and Zustand patterns, including React integration and testing guidelines ([da8bb06](https://github.com/woliveiras/copilot-configs/commit/da8bb06fe7c710f7773802aa9628c34891f675d8))
+* add guidelines for Conventional Commits format and usage ([967f849](https://github.com/woliveiras/copilot-configs/commit/967f849ac74a50566ee1e1b59bc5f57faed3a5a9))
+* add migration guide for React Router v6 to v7 framework mode ([b44cf07](https://github.com/woliveiras/copilot-configs/commit/b44cf0780b8f5586b41e0af093f715d885ce67e2))
+* add RFC template for structured documentation ([668f036](https://github.com/woliveiras/copilot-configs/commit/668f036a3229fa8054372816c1552d4ad22a8528))
+* add Spec Driven Development (SDD) workflow section to README with detailed steps and prompt usage ([d6f2616](https://github.com/woliveiras/copilot-configs/commit/d6f261616b30d4d3c93026c54ac05bece341dee6))
+* add TanStack Query v5 guidelines covering hooks, queries, and mutations ([a3cf3d5](https://github.com/woliveiras/copilot-configs/commit/a3cf3d5fd4b084ce9fc693f33b375f09317826c0))
+* add Zod patterns skill documentation for validation use cases ([7cd873f](https://github.com/woliveiras/copilot-configs/commit/7cd873f859e2cc67f1a462945ae1c128b5cdc44b))
+* enhance FastAPI guidelines with async patterns and dependency injection practices ([b247f16](https://github.com/woliveiras/copilot-configs/commit/b247f168a9697efd7aeb3c924fa87ee87ae7d26a))
+* enhance installation script with interactive configuration options for copilot-instructions.md ([c558513](https://github.com/woliveiras/copilot-configs/commit/c55851384c8e60b1dfebb775d5272cf69c7b1afd))
+* enhance testability section in reviewer agent with additional checks and references ([424e733](https://github.com/woliveiras/copilot-configs/commit/424e7339a3da4ea3340a0e3cee7316f69241089e))
+* update installation and uninstallation instructions in README for clarity and detail ([fb2cd3f](https://github.com/woliveiras/copilot-configs/commit/fb2cd3f5fcd04d6b79cd8304cb33aff7b26583c7))
+* update installation script to preserve customizable files during updates and clarify force overwrite behavior in README ([9ad625f](https://github.com/woliveiras/copilot-configs/commit/9ad625f23c0a3ead626ddd5e4c8d0ecbf97e31cc))
+* update RFC writing instructions to include rfc-template skill format for quick generation ([5597666](https://github.com/woliveiras/copilot-configs/commit/559766692ad80e45eee65ddeee9ad1077bd02b07))
+* update skills and prompts count in README for accuracy ([9597c6f](https://github.com/woliveiras/copilot-configs/commit/9597c6f0c947bb4effa61b02624e6ceb6b3a4b22))
+* update skills section to reflect additional templates and new RFC and Zod patterns entries ([b79ccc6](https://github.com/woliveiras/copilot-configs/commit/b79ccc691601aa1998203156c38f5730ed7c9d20))
+
+
+### Bug Fixes
+
+* update guideline for unexported package-level variable naming ([f1d8dfd](https://github.com/woliveiras/copilot-configs/commit/f1d8dfd093ff9776c18b227b01df1591d8a1897d))
+
 ## [1.2.0](https://github.com/woliveiras/copilot-configs/compare/v1.1.0...v1.2.0) (2026-04-17)
 
 
