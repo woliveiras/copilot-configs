@@ -40,26 +40,43 @@ detect_vscode_dir() {
   esac
 }
 
-# Copy a file, respecting --force flag
+# Files users are expected to customize. Preserved during updates unless --force.
+CUSTOMIZABLE_FILES="
+copilot-instructions.md
+hooks/guardrails-rules.txt
+"
+
+is_customizable() {
+  echo "$CUSTOMIZABLE_FILES" | grep -qxF "$1"
+}
+
+# Copy a file, always overwriting. Silently skips if files are identical.
 # Usage: safe_copy <src> <dest>
 safe_copy() {
   local src="$1" dest="$2"
-  if [[ -f "$dest" ]] && [[ "$FORCE" == "false" ]]; then
-    warn "Skipped (already exists): $dest"
+  if [[ -f "$dest" ]] && diff -q "$src" "$dest" &>/dev/null; then
     return 0
   fi
+  local action="Installed"
+  [[ -f "$dest" ]] && action="Updated"
   mkdir -p "$(dirname "$dest")"
   cp "$src" "$dest"
-  ok "Copied: $dest"
+  ok "$action: $dest"
 }
 
-# Copy a directory tree, respecting --force flag
+# Copy a directory tree. Customizable files are preserved unless --force.
 # Usage: safe_copy_tree <src_dir> <dest_dir>
 safe_copy_tree() {
   local src_dir="$1" dest_dir="$2"
   find "$src_dir" -type f | while read -r src_file; do
     local rel_path="${src_file#"$src_dir"/}"
-    safe_copy "$src_file" "$dest_dir/$rel_path"
+    if is_customizable "$rel_path" && [[ -f "$dest_dir/$rel_path" ]] && [[ "$FORCE" == "false" ]]; then
+      if ! diff -q "$src_file" "$dest_dir/$rel_path" &>/dev/null; then
+        warn "Preserved (customized): $dest_dir/$rel_path"
+      fi
+    else
+      safe_copy "$src_file" "$dest_dir/$rel_path"
+    fi
   done
 }
 
@@ -507,7 +524,7 @@ Usage:
 Options:
   --project     Copy .github/ template into the current working directory
   --configure   Interactively configure copilot-instructions.md placeholders
-  --force       Overwrite files that already exist (default: skip)
+  --force       Overwrite all files, including customized ones (default: preserve)
   --help        Show this help message
 
 Examples:
@@ -548,12 +565,14 @@ if [[ "$PROJECT" == "true" ]]; then
   # Copy .github/ template
   safe_copy_tree "$INSTALL_DIR/project/.github" "./.github"
 
-  # Copy mise.toml template (only if it doesn't exist, regardless of --force)
-  if [[ ! -f "./mise.toml" ]]; then
+  # Copy mise.toml template (customizable — preserved on update)
+  if [[ ! -f "./mise.toml" ]] || [[ "$FORCE" == "true" ]]; then
+    mise_action="Installed"
+    [[ -f "./mise.toml" ]] && mise_action="Overwritten"
     cp "$INSTALL_DIR/project/mise.toml" "./mise.toml"
-    ok "Copied: ./mise.toml"
+    ok "$mise_action: ./mise.toml"
   else
-    warn "Skipped (already exists): ./mise.toml"
+    warn "Preserved (customized): ./mise.toml"
   fi
 
   echo ""

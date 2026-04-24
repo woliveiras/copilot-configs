@@ -65,7 +65,7 @@ You can also run `--configure` standalone on an existing project to reconfigure:
 ~/.copilot-configs/install.sh --configure
 ```
 
-Run from inside your project directory. Existing files are preserved by default. Use `--force` to overwrite.
+Run from inside your project directory. Managed files (instructions, agents, skills) are always updated to the latest version. Customizable files (`copilot-instructions.md`, `guardrails-rules.txt`, `mise.toml`) are preserved. Use `--force` to overwrite everything.
 
 ## What's Included
 
