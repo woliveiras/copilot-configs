@@ -35,7 +35,6 @@ import * as z from "zod"
 ```ts
 // ✅ v4
 z.record(z.string(), z.unknown())
-z.record(z.string(), z.number())
 
 // ❌ v3-only (fails silently or errors in v4)
 z.record(z.unknown())
@@ -57,87 +56,17 @@ result.error.format()
 ```ts
 // ✅ v4
 z.string().min(1, { error: "Required" })
-z.number().max(100, { error: "Must be 100 or less" })
 
 // ⚠️ v3 style (deprecated in v4)
 z.string().min(1, { message: "Required" })
 ```
 
-## Common patterns
+## Common field modifiers
 
-### Optional and nullable fields
 ```ts
 z.string().optional()   // string | undefined
 z.string().nullable()   // string | null
 z.string().nullish()    // string | null | undefined
-```
-
-### Generic response wrappers
-```ts
-export function PaginatedResponseSchema<T extends z.ZodTypeAny>(itemSchema: T) {
-  return z.object({
-    records: z.array(itemSchema),
-    totalRecords: z.number(),
-  })
-}
-
-// Usage
-PaginatedResponseSchema(BookSchema)
-```
-
-### Discriminated unions
-```ts
-const ResultSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("success"), data: z.string() }),
-  z.object({ type: z.literal("error"),   message: z.string() }),
-])
-```
-
-## Runtime validation in API clients
-
-Pass a schema to validate responses at the boundary:
-
-```ts
-async function fetchAPI<T>(
-  path: string,
-  options?: RequestInit,
-  schema?: z.ZodSchema<T>,
-): Promise<T> {
-  const data = await res.json()
-  if (schema) return schema.parse(data) // throws ZodError if shape is wrong
-  return data as T                       // backwards-compatible for unvalidated endpoints
-}
-
-// Usage
-fetchAPI("/user/me", undefined, UserSchema)
-```
-
-## Form validation
-
-```ts
-const loginSchema = z.object({
-  username: z.string().min(1, { error: "Required" }).transform(s => s.trim()),
-  password: z.string().min(1, { error: "Required" }),
-})
-
-const result = loginSchema.safeParse({ username, password })
-if (!result.success) {
-  setError(z.prettifyError(result.error))
-  return
-}
-await login(result.data.username, result.data.password)
-```
-
-## Validating values from `localStorage`
-
-```ts
-const keySchema = z.string().min(1)
-
-function getStoredKey(): string | null {
-  const raw = localStorage.getItem("my-key")
-  const result = keySchema.safeParse(raw)
-  return result.success ? result.data : null
-}
 ```
 
 ## Schema file layout
@@ -152,3 +81,5 @@ src/lib/schemas/
 ```
 
 Do not maintain a parallel `types/` folder — schemas are the single source of truth for types.
+
+For validation recipes (API clients, forms, localStorage), use the `zod-patterns` skill.
