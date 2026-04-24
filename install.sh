@@ -653,16 +653,6 @@ if [[ "$PROJECT" == "true" ]]; then
   # Install only relevant instruction files
   install_instructions
 
-  # Copy mise.toml template (customizable — preserved on update)
-  if [[ ! -f "./mise.toml" ]] || [[ "$FORCE" == "true" ]]; then
-    mise_action="Installed"
-    [[ -f "./mise.toml" ]] && mise_action="Overwritten"
-    cp "$INSTALL_DIR/project/mise.toml" "./mise.toml"
-    ok "$mise_action: ./mise.toml"
-  else
-    warn "Preserved (customized): ./mise.toml"
-  fi
-
   echo ""
   ok "Project template applied!"
 
@@ -676,7 +666,6 @@ if [[ "$PROJECT" == "true" ]]; then
     info "  - Configure: ~/.copilot-configs/install.sh --configure"
   fi
   info "  - Add more instructions: ls ~/.copilot-configs/project/.github/instructions/"
-  info "  - Uncomment tools in mise.toml for your stack"
   info "  - Edit .github/hooks/guardrails-rules.txt to customize guardrails"
   exit 0
 fi

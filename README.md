@@ -57,7 +57,7 @@ For project-level files, re-run `--project` inside your repo:
 ~/.copilot-configs/install.sh --project
 ```
 
-Managed files (instructions, agents, skills, hooks) are updated to the latest version. Customizable files (`copilot-instructions.md`, `guardrails-rules.txt`, `mise.toml`) are preserved. Use `--force` to overwrite everything, including customized files.
+Managed files (instructions, agents, skills, hooks) are updated to the latest version. Customizable files (`copilot-instructions.md`, `guardrails-rules.txt`) are preserved. Use `--force` to overwrite everything, including customized files.
 
 ## Uninstall
 
@@ -262,9 +262,8 @@ When the feature involves significant design choices, use these before or alongs
 All files are meant to be edited. After running `--project`:
 
 1. **Edit `copilot-instructions.md`** — fill in project name, description, directory structure, and build commands
-2. **Remove unused instruction files** — drop languages you don't use
+2. **Add more instructions** — copy from `~/.copilot-configs/project/.github/instructions/`
 3. **Tune guardrails** — add or remove rules in `guardrails-rules.txt`
-4. **Uncomment mise tools** — configure versions in `mise.toml`
 
 ## Contributing
 
