@@ -14,9 +14,9 @@ Every project needs the same Copilot setup: language-specific instructions, code
 
 - **8 instruction files** covering Go, TypeScript, Python, Kotlin, React, Astro/MDX, testing, and security
 - **4 agents** for spec-driven development: write specs → generate tests → implement code → update docs
-- **9 skills** with templates for specs, tests, docs, migrations, ADRs, validation patterns, and conventional commits
+- **11 skills** with templates for specs, tests, docs, migrations, ADRs, state management patterns, and conventional commits
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
-- **3 global prompts** for code review, refactoring, and test generation
+- **4 global prompts** for code review, refactoring, test generation, and SDD workflow
 
 ```
 copilot-configs/
@@ -29,7 +29,7 @@ copilot-configs/
         ├── instructions/              # 9 language & convention files
         ├── agents/                    # 4 agents + 6 design references
         │   └── references/            # Deep modules, interface design, etc.
-        ├── skills/                    # 9 skills with asset templates
+        ├── skills/                    # 11 skills with asset templates
         └── hooks/                     # Command guardrails (BLOCK/ASK rules)
 ```
 
@@ -103,7 +103,7 @@ Installed to `.github/` in your project root.
 | `spec-writer` | Interviews you to produce a structured spec. Detects large scope and breaks into vertical slices. |
 | `explorer` | Read-only codebase mapper. Produces a structured project summary. |
 | `reviewer` | Reviews code against specs and tests as source of truth. |
-| `architect` | Multi-design evaluation: explores → candidates → 3 parallel sub-designs → recommends. Saves RFC to `docs/rfcs/`. |
+| `architect` | Multi-design evaluation: explores → candidates → 3 parallel sub-designs → recommends. Saves RFC or ADR. |
 
 Agents reference design heuristics in `.github/agents/references/` (deep modules, interface design, complexity signals, dependency categories, pragmatic heuristics, seam finding).
 
@@ -130,6 +130,8 @@ There are three review surfaces — each for a different context:
 | `adr-template` | Record an Architectural Decision in MADR 4.0 format |
 | `zod-patterns` | Zod validation recipes (API clients, forms, localStorage) |
 | `react-router-migration` | Step-by-step guide for React Router v6 → v7 migration |
+| `xstate-patterns` | XState v5 recipes: React integration, actors, testing |
+| `zustand-patterns` | Zustand v5 recipes: middleware setup, immer, XState sync |
 
 #### Hooks (`.github/hooks/`)
 
