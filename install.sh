@@ -7,12 +7,14 @@ set -euo pipefail
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/woliveiras/copilot-configs/main/install.sh | bash
 #   ~/.copilot-configs/install.sh --project
-#   ~/.copilot-configs/install.sh --project --force
+#   ~/.copilot-configs/install.sh --project --configure
+#   ~/.copilot-configs/install.sh --configure
 
 REPO_URL="https://github.com/woliveiras/copilot-configs.git"
 INSTALL_DIR="$HOME/.copilot-configs"
 FORCE=false
 PROJECT=false
+CONFIGURE=false
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -62,6 +64,425 @@ safe_copy_tree() {
 }
 
 # ---------------------------------------------------------------------------
+# Detection functions
+# ---------------------------------------------------------------------------
+
+detect_languages() {
+  local langs=()
+  [[ -f "package.json" ]] && langs+=("JavaScript/TypeScript")
+  [[ -f "go.mod" ]] && langs+=("Go")
+  { [[ -f "pyproject.toml" ]] || [[ -f "requirements.txt" ]]; } && langs+=("Python")
+  { [[ -f "build.gradle.kts" ]] || [[ -f "build.gradle" ]]; } && langs+=("Kotlin/Java")
+  [[ -f "Cargo.toml" ]] && langs+=("Rust")
+  [[ -f "Gemfile" ]] && langs+=("Ruby")
+  [[ -f "mix.exs" ]] && langs+=("Elixir")
+  [[ -f "composer.json" ]] && langs+=("PHP")
+  [[ -f "Package.swift" ]] && langs+=("Swift")
+  if [[ ${#langs[@]} -eq 0 ]]; then
+    echo ""
+    return
+  fi
+  local result
+  result="$(printf '%s, ' "${langs[@]}")"
+  echo "${result%, }"
+}
+
+detect_frameworks() {
+  local fws=()
+  if [[ -f "package.json" ]]; then
+    grep -q '"react"' package.json 2>/dev/null && fws+=("React")
+    grep -q '"next"' package.json 2>/dev/null && fws+=("Next.js")
+    grep -q '"astro"' package.json 2>/dev/null && fws+=("Astro")
+    grep -q '"vue"' package.json 2>/dev/null && fws+=("Vue")
+    grep -q '"svelte"' package.json 2>/dev/null && fws+=("Svelte")
+    grep -q '"express"' package.json 2>/dev/null && fws+=("Express")
+    grep -q '"fastify"' package.json 2>/dev/null && fws+=("Fastify")
+    grep -q '"@tanstack/react-query"' package.json 2>/dev/null && fws+=("TanStack Query")
+    grep -q '"react-router"' package.json 2>/dev/null && fws+=("React Router")
+    grep -q '"tailwindcss"' package.json 2>/dev/null && fws+=("Tailwind CSS")
+  fi
+  if [[ -f "pyproject.toml" ]]; then
+    grep -qi 'fastapi' pyproject.toml 2>/dev/null && fws+=("FastAPI")
+    grep -qi 'django' pyproject.toml 2>/dev/null && fws+=("Django")
+    grep -qi 'flask' pyproject.toml 2>/dev/null && fws+=("Flask")
+  fi
+  if [[ -f "go.mod" ]]; then
+    grep -q 'gin-gonic' go.mod 2>/dev/null && fws+=("Gin")
+    grep -q 'labstack/echo' go.mod 2>/dev/null && fws+=("Echo")
+    grep -q 'gofiber' go.mod 2>/dev/null && fws+=("Fiber")
+  fi
+  if [[ ${#fws[@]} -eq 0 ]]; then
+    echo ""
+    return
+  fi
+  local result
+  result="$(printf '%s, ' "${fws[@]}")"
+  echo "${result%, }"
+}
+
+detect_package_manager() {
+  if [[ -f "pnpm-lock.yaml" ]]; then echo "pnpm"
+  elif [[ -f "yarn.lock" ]]; then echo "yarn"
+  elif [[ -f "bun.lockb" ]] || [[ -f "bun.lock" ]]; then echo "bun"
+  elif [[ -f "package-lock.json" ]] || [[ -f "package.json" ]]; then echo "npm"
+  else echo ""
+  fi
+}
+
+dir_description() {
+  case "$1" in
+    src)             echo "Source code" ;;
+    test|tests)      echo "Test files" ;;
+    docs)            echo "Documentation" ;;
+    public|static)   echo "Static assets" ;;
+    scripts)         echo "Scripts" ;;
+    cmd)             echo "Entry points" ;;
+    internal)        echo "Internal packages" ;;
+    pkg)             echo "Public packages" ;;
+    app)             echo "Application code" ;;
+    lib)             echo "Library code" ;;
+    config)          echo "Configuration" ;;
+    migrations|db)   echo "Database" ;;
+    api)             echo "API definitions" ;;
+    specs)           echo "Specifications" ;;
+    plans)           echo "Implementation plans" ;;
+    packages)        echo "Monorepo packages" ;;
+    apps)            echo "Monorepo apps" ;;
+    components)      echo "UI components" ;;
+    features)        echo "Feature modules" ;;
+    pages|views)     echo "Page components" ;;
+    routes)          echo "Route definitions" ;;
+    hooks)           echo "Custom hooks" ;;
+    utils|helpers)   echo "Utilities" ;;
+    services)        echo "Service layer" ;;
+    models)          echo "Data models" ;;
+    types)           echo "Type definitions" ;;
+    android)         echo "Android app" ;;
+    ios)             echo "iOS app" ;;
+    *)               echo "" ;;
+  esac
+}
+
+detect_directory_structure() {
+  local exclude_re="^(node_modules|dist|build|target|coverage|vendor|__pycache__)$"
+  local result=""
+  for dir in */; do
+    [[ ! -d "$dir" ]] && continue
+    local name="${dir%/}"
+    echo "$name" | grep -qE "$exclude_re" && continue
+    local desc
+    desc=$(dir_description "$name")
+    if [[ -n "$desc" ]]; then
+      result+="$(printf '%-14s # %s' "${name}/" "$desc")"
+    else
+      result+="${name}/"
+    fi
+    result+=$'\n'
+  done
+  printf '%s' "$result" | sed '/^$/d'
+}
+
+detect_build_commands() {
+  local lines=()
+
+  # mise
+  { [[ -f "mise.toml" ]] || [[ -f ".mise.toml" ]]; } \
+    && lines+=("mise install          # Install tool versions")
+
+  # Makefile targets
+  if [[ -f "Makefile" ]]; then
+    grep -q '^dev[[:space:]]*:' Makefile 2>/dev/null \
+      && lines+=("make dev              # Start development")
+    grep -q '^build[[:space:]]*:' Makefile 2>/dev/null \
+      && lines+=("make build            # Build project")
+    grep -q '^test[[:space:]]*:' Makefile 2>/dev/null \
+      && lines+=("make test             # Run tests")
+    grep -q '^lint[[:space:]]*:' Makefile 2>/dev/null \
+      && lines+=("make lint             # Run linters")
+  fi
+
+  # package.json scripts (only if no Makefile)
+  if [[ -f "package.json" ]] && [[ ! -f "Makefile" ]]; then
+    local pm
+    pm=$(detect_package_manager)
+    local run="${pm} run"
+    [[ "$pm" != "npm" ]] && run="$pm"
+    grep -q '"dev"' package.json 2>/dev/null \
+      && lines+=("${run} dev             # Start development")
+    grep -q '"build"' package.json 2>/dev/null \
+      && lines+=("${run} build           # Build project")
+    grep -q '"test"' package.json 2>/dev/null \
+      && lines+=("${run} test            # Run tests")
+    grep -q '"lint"' package.json 2>/dev/null \
+      && lines+=("${run} lint            # Run linters")
+  fi
+
+  # Go (only if no Makefile)
+  if [[ -f "go.mod" ]] && [[ ! -f "Makefile" ]]; then
+    lines+=("go build ./...        # Build")
+    lines+=("go test ./...         # Run tests")
+  fi
+
+  # Python (only if no Makefile)
+  if [[ -f "pyproject.toml" ]] && [[ ! -f "Makefile" ]]; then
+    if command -v uv &>/dev/null; then
+      lines+=("uv sync               # Install dependencies")
+    else
+      lines+=("pip install -e .      # Install dependencies")
+    fi
+    lines+=("pytest                # Run tests")
+  fi
+
+  if [[ ${#lines[@]} -eq 0 ]]; then
+    echo ""
+    return
+  fi
+  printf '%s\n' "${lines[@]}"
+}
+
+# ---------------------------------------------------------------------------
+# Section replacement (replaces content between BEGIN/END markers)
+# ---------------------------------------------------------------------------
+
+replace_section() {
+  local file="$1" marker="$2" content="$3"
+  local begin="<!-- BEGIN:${marker} -->"
+  local end="<!-- END:${marker} -->"
+  local tmp="${file}.tmp"
+  local in_section="false"
+
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    if [[ "$line" == *"$begin"* ]]; then
+      printf '%s\n' "$line"
+      [[ -n "$content" ]] && printf '%s\n' "$content"
+      in_section="true"
+    elif [[ "$line" == *"$end"* ]]; then
+      printf '%s\n' "$line"
+      in_section="false"
+    elif [[ "$in_section" == "false" ]]; then
+      printf '%s\n' "$line"
+    fi
+  done < "$file" > "$tmp"
+
+  mv "$tmp" "$file"
+}
+
+code_block() {
+  local lang="${1:-}" content="$2"
+  if [[ -n "$lang" ]]; then
+    printf '```%s\n%s\n```' "$lang" "$content"
+  else
+    printf '```\n%s\n```' "$content"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Configuration flows
+# ---------------------------------------------------------------------------
+
+fill_manually() {
+  local file="$1"
+
+  echo ""
+  info "Answer the following questions about your project:"
+  echo ""
+
+  local project_what project_stack project_arch
+  read -rp "  What does this project do? " project_what
+  read -rp "  Stack (languages, frameworks, key deps): " project_stack
+  read -rp "  Architecture (e.g., monolith, microservices, MVC): " project_arch
+
+  local overview
+  overview="$(printf '%s\n%s\n%s' \
+    "- **What**: ${project_what}" \
+    "- **Stack**: ${project_stack}" \
+    "- **Architecture**: ${project_arch}")"
+  replace_section "$file" "PROJECT_OVERVIEW" "$overview"
+  ok "Project overview saved."
+
+  # Directory structure
+  echo ""
+  info "Detecting directory structure..."
+  local detected_dirs
+  detected_dirs="$(detect_directory_structure)"
+
+  if [[ -n "$detected_dirs" ]]; then
+    echo ""
+    echo "$detected_dirs" | sed 's/^/  /'
+    echo ""
+    local use_dirs
+    read -rp "  Use detected structure? [Y/n]: " use_dirs
+    case "$use_dirs" in
+      [Nn]*)
+        info "Enter directory structure (one entry per line, empty line to finish):"
+        local custom_dirs=""
+        while IFS= read -r dline; do
+          [[ -z "$dline" ]] && break
+          custom_dirs+="${dline}"$'\n'
+        done
+        replace_section "$file" "DIRECTORY_STRUCTURE" "$(code_block "" "$custom_dirs")"
+        ;;
+      *)
+        replace_section "$file" "DIRECTORY_STRUCTURE" "$(code_block "" "$detected_dirs")"
+        ;;
+    esac
+  else
+    info "No directories detected. Enter structure (one entry per line, empty line to finish):"
+    local custom_dirs=""
+    while IFS= read -r dline; do
+      [[ -z "$dline" ]] && break
+      custom_dirs+="${dline}"$'\n'
+    done
+    replace_section "$file" "DIRECTORY_STRUCTURE" "$(code_block "" "$custom_dirs")"
+  fi
+  ok "Directory structure saved."
+
+  # Build commands
+  echo ""
+  info "Detecting build commands..."
+  local detected_cmds
+  detected_cmds="$(detect_build_commands)"
+
+  if [[ -n "$detected_cmds" ]]; then
+    echo ""
+    echo "$detected_cmds" | sed 's/^/  /'
+    echo ""
+    local use_cmds
+    read -rp "  Use detected commands? [Y/n]: " use_cmds
+    case "$use_cmds" in
+      [Nn]*)
+        info "Enter build/test commands (one per line, empty line to finish):"
+        local custom_cmds=""
+        while IFS= read -r cline; do
+          [[ -z "$cline" ]] && break
+          custom_cmds+="${cline}"$'\n'
+        done
+        replace_section "$file" "BUILD_COMMANDS" "$(code_block "bash" "$custom_cmds")"
+        ;;
+      *)
+        replace_section "$file" "BUILD_COMMANDS" "$(code_block "bash" "$detected_cmds")"
+        ;;
+    esac
+  else
+    info "No build commands detected. Enter commands (one per line, empty line to finish):"
+    local custom_cmds=""
+    while IFS= read -r cline; do
+      [[ -z "$cline" ]] && break
+      custom_cmds+="${cline}"$'\n'
+    done
+    replace_section "$file" "BUILD_COMMANDS" "$(code_block "bash" "$custom_cmds")"
+  fi
+  ok "Build commands saved."
+}
+
+fill_auto_detect() {
+  local file="$1"
+
+  info "Analyzing project..."
+  echo ""
+
+  local languages frameworks stack
+  languages="$(detect_languages)"
+  frameworks="$(detect_frameworks)"
+
+  if [[ -n "$languages" ]]; then
+    stack="$languages"
+    [[ -n "$frameworks" ]] && stack="${languages}, ${frameworks}"
+  else
+    stack="Not detected"
+  fi
+
+  local dirs cmds
+  dirs="$(detect_directory_structure)"
+  cmds="$(detect_build_commands)"
+
+  # Show summary
+  info "Detected configuration:"
+  echo ""
+  echo "  Stack: $stack"
+  if [[ -n "$dirs" ]]; then
+    echo ""
+    echo "  Directories:"
+    echo "$dirs" | sed 's/^/    /'
+  fi
+  if [[ -n "$cmds" ]]; then
+    echo ""
+    echo "  Build commands:"
+    echo "$cmds" | sed 's/^/    /'
+  fi
+  echo ""
+
+  local apply
+  read -rp "  Apply detected values? [Y/n]: " apply
+  case "$apply" in
+    [Nn]*)
+      info "Skipped. Edit .github/copilot-instructions.md manually."
+      return
+      ;;
+  esac
+
+  # Apply overview (What and Architecture need manual editing)
+  local overview
+  overview="$(printf '%s\n%s\n%s' \
+    "- **What**: [Edit: add project description]" \
+    "- **Stack**: ${stack}" \
+    "- **Architecture**: [Edit: add architecture pattern]")"
+  replace_section "$file" "PROJECT_OVERVIEW" "$overview"
+
+  if [[ -n "$dirs" ]]; then
+    replace_section "$file" "DIRECTORY_STRUCTURE" "$(code_block "" "$dirs")"
+  fi
+
+  if [[ -n "$cmds" ]]; then
+    replace_section "$file" "BUILD_COMMANDS" "$(code_block "bash" "$cmds")"
+  fi
+
+  ok "Configuration applied!"
+  warn "Review the file — 'What' and 'Architecture' still need manual editing."
+}
+
+configure_instructions() {
+  local instructions="./.github/copilot-instructions.md"
+
+  if [[ ! -f "$instructions" ]]; then
+    warn "copilot-instructions.md not found. Skipping configuration."
+    return
+  fi
+
+  if ! grep -q '<!-- BEGIN:PROJECT_OVERVIEW -->' "$instructions" 2>/dev/null; then
+    warn "No configuration markers found in copilot-instructions.md."
+    warn "The file may have been customized already. Skipping."
+    return
+  fi
+
+  if [[ ! -t 0 ]]; then
+    warn "Not running in a terminal. Skipping interactive configuration."
+    return
+  fi
+
+  echo ""
+  info "Configure copilot-instructions.md"
+  echo ""
+  echo "  1) Fill interactively"
+  echo "  2) Auto-detect from project files"
+  echo "  3) Skip (edit later)"
+  echo ""
+
+  local choice
+  read -rp "  Choose [1/2/3]: " choice
+
+  case "$choice" in
+    1) fill_manually "$instructions" ;;
+    2) fill_auto_detect "$instructions" ;;
+    *) info "Skipping configuration." ;;
+  esac
+
+  echo ""
+  info "Tip: refine with GitHub Copilot by running 'copilot' and asking:"
+  info '  "Review and improve .github/copilot-instructions.md for this project"'
+}
+
+# ---------------------------------------------------------------------------
 # Parse args
 # ---------------------------------------------------------------------------
 
@@ -69,19 +490,23 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --project) PROJECT=true; shift ;;
     --force)   FORCE=true; shift ;;
+    --configure) CONFIGURE=true; shift ;;
     --help|-h)
       cat <<EOF
 copilot-configs installer
 
 Usage:
-  install.sh              Install/update global Copilot configs
-  install.sh --project    Apply project template to current directory
-  install.sh --force      Overwrite existing files
+  install.sh                          Install/update global Copilot configs
+  install.sh --project                Apply project template to current directory
+  install.sh --project --configure    Apply template and configure placeholders
+  install.sh --configure              Configure copilot-instructions.md in current directory
+  install.sh --force                  Overwrite existing files
 
 Options:
-  --project   Copy .github/ template into the current working directory
-  --force     Overwrite files that already exist (default: skip)
-  --help      Show this help message
+  --project     Copy .github/ template into the current working directory
+  --configure   Interactively configure copilot-instructions.md placeholders
+  --force       Overwrite files that already exist (default: skip)
+  --help        Show this help message
 
 Examples:
   # Install global configs
@@ -90,8 +515,11 @@ Examples:
   # Apply project template
   ~/.copilot-configs/install.sh --project
 
-  # Apply project template, overwriting existing files
-  ~/.copilot-configs/install.sh --project --force
+  # Apply project template and configure placeholders
+  ~/.copilot-configs/install.sh --project --configure
+
+  # Reconfigure an existing project
+  ~/.copilot-configs/install.sh --configure
 EOF
       exit 0
       ;;
@@ -128,11 +556,28 @@ if [[ "$PROJECT" == "true" ]]; then
 
   echo ""
   ok "Project template applied!"
+
+  if [[ "$CONFIGURE" == "true" ]]; then
+    configure_instructions
+  fi
+
+  echo ""
   info "Next steps:"
-  info "  1. Edit .github/copilot-instructions.md with your project details"
-  info "  2. Remove instruction files for languages you don't use"
-  info "  3. Uncomment tools in mise.toml for your stack"
-  info "  4. Edit .github/hooks/guardrails-rules.txt to customize guardrails"
+  if [[ "$CONFIGURE" != "true" ]]; then
+    info "  - Configure: ~/.copilot-configs/install.sh --configure"
+  fi
+  info "  - Remove instruction files for languages you don't use"
+  info "  - Uncomment tools in mise.toml for your stack"
+  info "  - Edit .github/hooks/guardrails-rules.txt to customize guardrails"
+  exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Configure mode (standalone)
+# ---------------------------------------------------------------------------
+
+if [[ "$CONFIGURE" == "true" ]]; then
+  configure_instructions
   exit 0
 fi
 

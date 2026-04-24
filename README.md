@@ -49,6 +49,22 @@ After installing, apply project-level configs to any repository:
 ~/.copilot-configs/install.sh --project
 ```
 
+To also configure `copilot-instructions.md` placeholders interactively:
+
+```bash
+~/.copilot-configs/install.sh --project --configure
+```
+
+The `--configure` flag offers two modes:
+- **Interactive** — answer questions about your project
+- **Auto-detect** — detects stack, directories and build commands from manifest files
+
+You can also run `--configure` standalone on an existing project to reconfigure:
+
+```bash
+~/.copilot-configs/install.sh --configure
+```
+
 Run from inside your project directory. Existing files are preserved by default. Use `--force` to overwrite.
 
 ## What's Included
