@@ -78,6 +78,7 @@ Installed to `~/Library/Application Support/Code/User/prompts/` (macOS) or `~/.c
 | `review.prompt.md` | Structured code review checklist |
 | `refactor.prompt.md` | Refactor preserving behavior |
 | `test.prompt.md` | Generate unit tests matching project patterns |
+| `sdd.prompt.md` | Full SDD cycle: spec → test → implement → review → docs |
 
 ### Project-level
 
@@ -145,6 +146,90 @@ Rules are configurable in `guardrails-rules.txt`.
 ### mise.toml
 
 Template for [mise](https://mise.jdx.dev/) tool version management. Uncomment the tools your project uses.
+
+## Spec Driven Development (SDD) Workflow
+
+This project is built around **Spec Driven Development** — specs and tests are the source of truth, code adapts to them.
+
+### The Cycle
+
+```
+┌─────────┐     ┌──────────┐     ┌────────────┐     ┌──────────┐     ┌──────┐
+│  1.Spec │────▶│ 2.Tests  │────▶│ 3.Implement│────▶│ 4.Review │────▶│5.Docs│
+└─────────┘     └──────────┘     └────────────┘     └──────────┘     └──────┘
+ @spec-writer    test-from-spec   Write code        @reviewer        doc-updater
+ or              skill            to pass tests     agent            skill
+ spec-template                    (never edit                        (if API/arch
+ skill                            tests)                             changed)
+```
+
+### Quick Start — `/sdd` Prompt
+
+The fastest way to run the full cycle is the `/sdd` global prompt. In Copilot Chat:
+
+```
+/sdd Add user authentication with JWT
+```
+
+The prompt orchestrates each step in order with explicit gates — it won't advance without your approval.
+
+### Step by Step (Manual)
+
+You can also run each step individually:
+
+#### 1. Write a Spec
+
+```
+@spec-writer I need a feature for user authentication with JWT
+```
+
+The agent interviews you (one question at a time), then produces a structured spec in `specs/`. For large features, it auto-detects scope and proposes vertical slices.
+
+If you already know the requirements and don't need an interview:
+
+```
+Use the spec-template skill to create a spec for JWT auth
+```
+
+#### 2. Generate Tests
+
+```
+Use the test-from-spec skill for specs/user-auth.md
+```
+
+Each acceptance criterion from the spec becomes at least one test. Tests must fail initially (red phase).
+
+#### 3. Implement
+
+Write code to make the tests pass. The golden rule: **never modify the tests**. If a test seems wrong, revisit the spec first.
+
+#### 4. Review
+
+```
+@reviewer review the user-auth implementation
+```
+
+The reviewer checks alignment between spec → tests → code. It verifies every acceptance criterion has a test, every test has matching code, and flags architecture issues using deep-module heuristics.
+
+For quick reviews without specs, use the `/review` prompt instead.
+
+#### 5. Update Docs
+
+```
+Use the doc-updater skill for the user-auth feature
+```
+
+Only needed when public API, architecture, or setup changed. Skip for internal-only changes.
+
+### Architecture Decisions
+
+When the feature involves significant design choices, use these before or alongside the SDD cycle:
+
+| Need | Tool | Output |
+|------|------|--------|
+| Explore architecture opportunities | `@architect` agent | RFC or ADR with 3 evaluated designs |
+| Record a quick decision | `adr-template` skill | ADR in `docs/decisions/` (MADR 4.0) |
+| Propose a change for review | `rfc-template` skill | RFC in `docs/rfcs/` |
 
 ## Customization
 
