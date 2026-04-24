@@ -33,13 +33,39 @@ copilot-configs/
         └── hooks/                     # Command guardrails (BLOCK/ASK rules)
 ```
 
-## Quick Install
+## Install
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/woliveiras/copilot-configs/main/install.sh | bash
 ```
 
 This clones the repo to `~/.copilot-configs/` and copies global prompts to your VS Code user directory.
+
+## Update
+
+Run the same install command again:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/woliveiras/copilot-configs/main/install.sh | bash
+```
+
+The installer pulls the latest version and updates your global prompts automatically. Files that are identical to the latest version are silently skipped.
+
+For project-level files, re-run `--project` inside your repo:
+
+```bash
+~/.copilot-configs/install.sh --project
+```
+
+Managed files (instructions, agents, skills, hooks) are updated to the latest version. Customizable files (`copilot-instructions.md`, `guardrails-rules.txt`, `mise.toml`) are preserved. Use `--force` to overwrite everything, including customized files.
+
+## Uninstall
+
+```bash
+~/.copilot-configs/uninstall.sh
+```
+
+Removes the `~/.copilot-configs/` directory and global prompts from VS Code. Project-level files (`.github/` in your repos) are not touched — remove them manually if needed.
 
 ## Project Setup
 
@@ -65,7 +91,7 @@ You can also run `--configure` standalone on an existing project to reconfigure:
 ~/.copilot-configs/install.sh --configure
 ```
 
-Run from inside your project directory. Managed files (instructions, agents, skills) are always updated to the latest version. Customizable files (`copilot-instructions.md`, `guardrails-rules.txt`, `mise.toml`) are preserved. Use `--force` to overwrite everything.
+Run from inside your project directory.
 
 ## What's Included
 
@@ -239,14 +265,6 @@ All files are meant to be edited. After running `--project`:
 2. **Remove unused instruction files** — drop languages you don't use
 3. **Tune guardrails** — add or remove rules in `guardrails-rules.txt`
 4. **Uncomment mise tools** — configure versions in `mise.toml`
-
-## Uninstall
-
-```bash
-~/.copilot-configs/uninstall.sh
-```
-
-Removes global configs. Project-level files are not touched.
 
 ## Contributing
 
