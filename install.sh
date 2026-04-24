@@ -270,8 +270,10 @@ replace_section() {
 code_block() {
   local lang="${1:-}" content="$2"
   if [[ -n "$lang" ]]; then
+    # shellcheck disable=SC2016
     printf '```%s\n%s\n```' "$lang" "$content"
   else
+    # shellcheck disable=SC2016
     printf '```\n%s\n```' "$content"
   fi
 }
@@ -308,7 +310,7 @@ fill_manually() {
 
   if [[ -n "$detected_dirs" ]]; then
     echo ""
-    echo "$detected_dirs" | sed 's/^/  /'
+    echo "${detected_dirs//$'\n'/$'\n  '}" | sed '1s/^/  /'
     echo ""
     local use_dirs
     read -rp "  Use detected structure? [Y/n]: " use_dirs
@@ -345,7 +347,7 @@ fill_manually() {
 
   if [[ -n "$detected_cmds" ]]; then
     echo ""
-    echo "$detected_cmds" | sed 's/^/  /'
+    echo "${detected_cmds//$'\n'/$'\n  '}" | sed '1s/^/  /'
     echo ""
     local use_cmds
     read -rp "  Use detected commands? [Y/n]: " use_cmds
@@ -403,12 +405,12 @@ fill_auto_detect() {
   if [[ -n "$dirs" ]]; then
     echo ""
     echo "  Directories:"
-    echo "$dirs" | sed 's/^/    /'
+    echo "    ${dirs//$'\n'/$'\n    '}"
   fi
   if [[ -n "$cmds" ]]; then
     echo ""
     echo "  Build commands:"
-    echo "$cmds" | sed 's/^/    /'
+    echo "    ${cmds//$'\n'/$'\n    '}"
   fi
   echo ""
 
