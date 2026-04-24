@@ -11,10 +11,10 @@ applyTo: "**/*.tsx,**/*.jsx"
 - Keep components focused — split large components into smaller ones
 
 ## State Management
-- **Server state**: TanStack Query (React Query) — queries with descriptive keys
-- **UI state**: `useState` for local, Zustand for shared feature state
-- **URL state**: Router params and search params
-- **Complex flows**: XState for multi-step state machines
+- **Server state**: TanStack Query (see `tanstack-query.instructions.md`)
+- **UI state**: `useState` for local, Zustand for shared (see `zustand.instructions.md`)
+- **URL state**: React Router params and loaders (see `react-router.instructions.md`)
+- **Complex flows**: XState (see `xstate.instructions.md`)
 
 ## Hooks
 - Custom hooks for data fetching: `useBooks()`, `useCreateBook()`
