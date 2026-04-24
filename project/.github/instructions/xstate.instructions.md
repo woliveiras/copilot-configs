@@ -22,16 +22,8 @@ For simple toggles or preferences, use Zustand instead.
 typed as your union — `DoneActorEvent` is not in that union, so `event.output` is
 inaccessible at runtime.
 
-**❌ Avoid for machines with `invoke`/`onDone`/`onError`:**
-```ts
-export const myMachine = setup({
-  actions: {
-    setResult: assign({ data: ({ event }) => event.output }), // undefined at runtime
-  },
-}).createMachine({ ... })
-```
+**Canonical pattern — inline `assign` with `unknown` cast:**
 
-**✅ Use `createMachine` with inline `assign` and `unknown` cast:**
 ```ts
 export const myMachine = createMachine(
   {
@@ -73,7 +65,6 @@ export const myMachine = createMachine({
     context: {} as MyContext,
     events: {} as MyEvent,
   },
-  // ...
 })
 ```
 
@@ -81,33 +72,17 @@ export const myMachine = createMachine({
 
 - `fromPromise` — async operations (API calls, async init)
 - `fromCallback` — event-based / DOM listeners
-- Pass runtime dependencies via `input`, never close over mutable state:
+- Pass runtime dependencies via `input`, never close over mutable state
+
+## React — select minimum slice
 
 ```ts
-invoke: {
-  src: "myActor",
-  input: ({ context }) => context,
-}
-```
-
-## Consuming in React
-
-```ts
-import { useActorRef, useSelector } from "@xstate/react"
-
-// Provider — creates actor once
-const actorRef = useActorRef(myMachine)
-
-// Consumer — subscribe to minimum slice (avoids unnecessary re-renders)
 const isLoading = useSelector(actorRef, (s) => s.matches("loading"))
-const error = useSelector(actorRef, (s) => s.context.error)
-
-actorRef.send({ type: "RETRY" })
 ```
 
 Expose `actorRef` via React context so consumers don't recreate the machine.
 
-## Testing with `createActor`
+## Testing — use `createActor`, avoid state polling
 
 ```ts
 const actor = createActor(myMachine)
@@ -117,24 +92,8 @@ expect(actor.getSnapshot().value).toBe("submitting")
 actor.stop()
 ```
 
-Override actors in tests with `machine.provide()`:
-
-```ts
-const actor = createActor(
-  myMachine.provide({
-    actors: { fetchData: fromPromise(async () => mockResult) },
-  }),
-)
-```
-
-### Async assertions — avoid polling on state name
-
-`vi.waitFor(() => snapshot.matches("X"))` can miss transient states.
-
-**✅ Wait for observable side effects, then check context:**
-```ts
-await vi.waitFor(() => expect(mockFn).toHaveBeenCalled())
-await vi.waitFor(() => actor.getSnapshot().context.data !== null)
-```
+Wait for side effects, not state names: `await vi.waitFor(() => expect(mockFn).toHaveBeenCalled())`
 
 Always call `actor.stop()` after each test.
+
+For full React integration, actor recipes, and testing patterns, use the `xstate-patterns` skill.
