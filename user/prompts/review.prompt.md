@@ -1,5 +1,5 @@
 ---
-description: "Code review with a structured checklist. Use when you want a thorough review of code changes."
+description: "Quick code review checklist. Use for fast feedback without specs. For spec-driven review, use the @reviewer agent instead."
 ---
 
 Review the provided code changes using this checklist:
@@ -8,11 +8,6 @@ Review the provided code changes using this checklist:
 - Does the code do what it claims to do?
 - Are edge cases handled?
 - Are error paths covered?
-
-## Tests
-- Are there tests for the new/changed behavior?
-- Do tests cover edge cases and error scenarios?
-- Are test names descriptive enough to serve as documentation?
 
 ## Security
 - Is user input validated and sanitized?
@@ -24,9 +19,9 @@ Review the provided code changes using this checklist:
 - Are names descriptive and consistent with the codebase?
 - Are functions focused (single responsibility)?
 
-## Architecture
-- Does this change respect the existing module boundaries?
-- Are dependencies flowing in the right direction?
-- Could this be simplified without losing functionality?
+## Tests
+- Are there tests for the new/changed behavior?
+- Do tests cover edge cases and error scenarios?
+- Are test names descriptive enough to serve as documentation?
 
 Be specific. Point to exact lines. Suggest concrete alternatives, not vague improvements.

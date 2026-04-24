@@ -12,9 +12,9 @@ Every project needs the same Copilot setup: language-specific instructions, code
 
 **What you get:**
 
-- **9 instruction files** covering Go, TypeScript, Python, Kotlin, React, Astro/MDX, testing, security, and conventional commits
+- **8 instruction files** covering Go, TypeScript, Python, Kotlin, React, Astro/MDX, testing, and security
 - **4 agents** for spec-driven development: write specs → generate tests → implement code → update docs
-- **4 skills** with templates for specs, tests, docs, and domain glossaries
+- **5 skills** with templates for specs, tests, docs, domain glossaries, and conventional commits
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
 - **3 global prompts** for code review, refactoring, and test generation
 
@@ -79,7 +79,6 @@ Installed to `.github/` in your project root.
 | `astro-mdx.instructions.md` | `**/*.mdx, **/*.astro` | Frontmatter, no H1, code fences |
 | `testing.instructions.md` | `**/*.test.*, **/*.spec.*` | AAA pattern, self-contained tests |
 | `security.instructions.md` | `**` | OWASP baseline, no hardcoded secrets |
-| `conventional-commits.instructions.md` | `**` | feat/fix/chore format |
 
 #### Agents (`.github/agents/`)
 
@@ -92,6 +91,16 @@ Installed to `.github/` in your project root.
 
 Agents reference design heuristics in `.github/agents/references/` (deep modules, interface design, complexity signals, dependency categories, pragmatic heuristics, seam finding).
 
+#### When to Use What: Code Review
+
+There are three review surfaces — each for a different context:
+
+| Surface | How to invoke | Best for |
+|---------|--------------|----------|
+| `@reviewer` agent | `@reviewer review this change` | **Spec-driven review** — verifies code against specs and tests, checks architecture with deep-module heuristics. Use when specs exist. |
+| `/review` prompt | Type `/review` in Copilot Chat | **Quick general review** — security, readability, correctness checklist. Use for fast feedback on any code, no specs needed. |
+| Built-in `/review` | `/review` in Copilot CLI | **Diff-based review** — analyzes staged/branch changes automatically. Use for pre-commit or pre-PR checks. |
+
 #### Skills (`.github/skills/`)
 
 | Skill | Purpose |
@@ -99,6 +108,7 @@ Agents reference design heuristics in `.github/agents/references/` (deep modules
 | `spec-template` | Fill a structured spec from direct input (no interview) |
 | `test-from-spec` | Generate unit tests from a spec's acceptance criteria |
 | `doc-updater` | Update `docs/` after implementing a feature |
+| `conventional-commit` | Write commit messages in Conventional Commits format |
 | `glossary` | Extract domain terminology into `GLOSSARY.md` |
 
 #### Hooks (`.github/hooks/`)
