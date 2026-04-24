@@ -71,26 +71,7 @@ Apply [interface-design](./references/interface-design.md) and
 
 ### 6. Write RFC
 
-Save the RFC to `docs/rfcs/<topic>.md`:
-
-```markdown
-# RFC: <Title>
-
-## Problem
-[What's wrong and why it matters]
-
-## Proposal
-[The recommended interface design]
-
-## Alternatives Considered
-[Other designs and why they were rejected]
-
-## Migration Plan
-[How to get from here to there incrementally]
-
-## Test Impact
-[What tests change, what new boundary tests are needed]
-```
+Save the RFC to `docs/rfcs/<topic>.md` using the `rfc-template` skill format. For quick RFC generation without full analysis, use the `rfc-template` skill directly.
 
 ## Rules
 
