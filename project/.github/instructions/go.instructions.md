@@ -22,7 +22,7 @@ Standards based on [Effective Go](https://go.dev/doc/effective_go) and [Uber Go 
 - Interface names: one-method interfaces end in `-er` (`Reader`, `Scanner`, `Downloader`)
 - Error variables: `ErrNotFound` (exported), `errNotFound` (unexported)
 - Error types: `NotFoundError` (suffix `Error`)
-- Unexported package-level vars: prefix with `_` (`_defaultTimeout`)
+- Unexported package-level vars: use descriptive names (`defaultTimeout`)
 
 ## Error Handling
 
