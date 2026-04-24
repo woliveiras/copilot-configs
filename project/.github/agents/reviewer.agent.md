@@ -33,7 +33,10 @@ Code must adapt to them, never the other way around.
 
 - Can this code be tested at the boundary?
 - Are dependencies injected, not created internally?
-  See [interface-design](./references/interface-design.md)
+- Are constructors doing real work (preventing test isolation)?
+- Are static/global singletons hiding dependencies?
+- Is business logic mixed with I/O?
+  See [interface-design](./references/interface-design.md) and [seam-finding](./references/seam-finding.md)
 
 ### Complexity
 
