@@ -246,6 +246,14 @@ Recommended organization for future skills:
 | `generate-adr` | Record an Architectural Decision in MADR 4.0 format |
 | `session-handoff` | Create a concise handoff for another session or agent |
 | `skill-authoring` | Create or revise Copilot skills using this repo's conventions |
+| `terraform-change` | Plan and review Terraform changes with approval gates |
+| `gcloud-operation` | Prepare safe Google Cloud CLI operations with explicit project/account context |
+| `ci-workflow` | Create, review, or debug GitHub Actions CI/CD workflows |
+| `llm-integration-review` | Design or review production LLM service integrations |
+| `langgraph-agent-design` | Design LangGraph agents around state, checkpoints, tools, and HITL |
+| `supabase-workflow` | Plan Supabase schema, RLS, Auth, Storage, and Edge Function changes |
+| `postgres-query-review` | Review PostgreSQL queries, migrations, indexes, and plans |
+| `chromadb-rag-workflow` | Design or review ChromaDB-backed RAG ingestion and retrieval |
 | `validate-with-zod` | Zod validation recipes (API clients, forms, localStorage) |
 | `migrate-react-router` | Step-by-step guide for React Router v6 → v7 migration |
 | `model-state-with-xstate` | XState v5 recipes: React integration, actors, testing |
