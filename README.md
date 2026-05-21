@@ -165,6 +165,9 @@ examples and recipes.
 | `langgraph.instructions.md` | LangGraph graph, workflow, and agent files | State schemas, nodes, checkpoints, interrupts, resume |
 | `llm-service.instructions.md` | LLM service and agent integration files | Provider boundary, structured outputs, retries, limits, observability |
 | `python-sqlite.instructions.md` | Python SQLite database/repository files | `sqlite3`, SQLAlchemy SQLite, parameter binding, connection lifecycle |
+| `postgres.instructions.md` | PostgreSQL SQL, migrations, repositories, and database files | Constraints, indexes, transactions, query plans, connection pools |
+| `chromadb.instructions.md` | ChromaDB, RAG, retriever, and embedding files | Clients, collections, embedding functions, metadata filters, backups |
+| `supabase.instructions.md` | Supabase clients, migrations, RLS, functions, and config | RLS, API keys, policies, migrations, generated types, Edge Functions |
 | `kotlin.instructions.md` | `**/*.kt` | MVVM, Hilt, Room, Compose |
 | `android-sqlite.instructions.md` | Android Room, DAO, entity, migration, and repository files | Room, DAOs, migrations, async queries, migration tests |
 | `react.instructions.md` | `**/*.tsx, **/*.jsx` | TanStack Query, feature-sliced, a11y |

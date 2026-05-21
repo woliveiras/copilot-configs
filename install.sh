@@ -303,6 +303,10 @@ detect_relevant_instructions() {
   { [[ -f "cloudbuild.yaml" ]] || [[ -f "cloudbuild.yml" ]] || [[ -f ".gcloudignore" ]] \
     || find . -maxdepth 4 \( -name '*gcloud*.sh' -o -name '*gcp*.sh' -o -name 'cloudbuild*.yaml' -o -name 'cloudbuild*.yml' \) -type f 2>/dev/null | grep -q .; } \
     && files+=("gcp.instructions.md")
+  { [[ -d "supabase" ]] || [[ -f "supabase/config.toml" ]]; } && {
+    files+=("supabase.instructions.md")
+    files+=("postgres.instructions.md")
+  }
 
   # JavaScript/TypeScript ecosystem
   if [[ -f "package.json" ]]; then
@@ -324,12 +328,21 @@ detect_relevant_instructions() {
       files+=("sqlite.instructions.md")
       files+=("node-sqlite.instructions.md")
     }
+    grep -qE '"(pg|postgres|postgresql|drizzle-orm|knex|prisma|typeorm)"' package.json 2>/dev/null \
+      && files+=("postgres.instructions.md")
+    grep -qE '"(chromadb|@chroma-core/[^"]+)"' package.json 2>/dev/null \
+      && files+=("chromadb.instructions.md")
+    grep -q '"@supabase/supabase-js"' package.json 2>/dev/null && {
+      files+=("supabase.instructions.md")
+      files+=("postgres.instructions.md")
+    }
   fi
 
   # Go
   if [[ -f "go.mod" ]]; then
     files+=("go.instructions.md")
     files+=("api-security.instructions.md")
+    grep -qE '(jackc/pgx|lib/pq|go-pg/pg|bun|gorm)' go.mod 2>/dev/null && files+=("postgres.instructions.md")
     grep -q 'labstack/echo' go.mod 2>/dev/null && files+=("echo.instructions.md")
     grep -qE '(mattn/go-sqlite3|modernc\.org/sqlite)' go.mod 2>/dev/null && {
       files+=("sqlite.instructions.md")
@@ -365,6 +378,13 @@ detect_relevant_instructions() {
     grep -qiE '(sqlite|aiosqlite|sqlalchemy|alembic)' pyproject.toml requirements.txt 2>/dev/null && {
       files+=("sqlite.instructions.md")
       files+=("python-sqlite.instructions.md")
+    }
+    grep -qiE '(psycopg|psycopg2|asyncpg|pg8000|sqlalchemy|alembic)' pyproject.toml requirements.txt 2>/dev/null \
+      && files+=("postgres.instructions.md")
+    grep -qi 'chromadb' pyproject.toml requirements.txt 2>/dev/null && files+=("chromadb.instructions.md")
+    grep -qiE '(^|[^a-z])supabase([^a-z]|$)' pyproject.toml requirements.txt 2>/dev/null && {
+      files+=("supabase.instructions.md")
+      files+=("postgres.instructions.md")
     }
   fi
 
