@@ -178,7 +178,7 @@ Recommended organization for future skills:
 | `vertical-tdd` | Implement one behavior at a time with red-green-refactor |
 | `bugfix-loop` | Reproduce, diagnose, regression-test, and fix bugs |
 | `update-docs` | Update `docs/` after implementing a feature |
-| `git-commit-message` | Write commit messages in Conventional Commits format |
+| `git-commit` | Review staged changes and create a Conventional Commit with confirmation |
 | `generate-glossary` | Extract domain terminology into `GLOSSARY.md` |
 | `generate-adr` | Record an Architectural Decision in MADR 4.0 format |
 | `session-handoff` | Create a concise handoff for another session or agent |
