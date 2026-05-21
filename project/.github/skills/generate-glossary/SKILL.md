@@ -6,11 +6,13 @@ description: "Extract and formalize domain terminology into a glossary. Use when
 # Generate Glossary
 
 Extract domain terminology from conversation, specs, or code and formalize it
-into a canonical glossary saved as `GLOSSARY.md`.
+into the project's vocabulary artifact.
 
-If the project already uses `CONTEXT.md`, read it first and keep the vocabulary
-consistent. `GLOSSARY.md` and `CONTEXT.md` are both acceptable domain vocabulary
-sources; preserve the convention already present in the project.
+`GLOSSARY.md` is the default for new projects. `CONTEXT.md` is also supported
+when a repository already uses that convention. If both exist, read both; treat
+`GLOSSARY.md` as the canonical term list and `CONTEXT.md` as broader domain
+context unless the project says otherwise. If they conflict, ask before changing
+either file.
 
 ## When to Use
 
@@ -26,10 +28,15 @@ sources; preserve the convention already present in the project.
    - Same word used for different concepts (ambiguity)
    - Different words used for the same concept (synonyms)
    - Vague or overloaded terms
-3. Propose a canonical glossary — be **opinionated** about term choices
-4. Write to `GLOSSARY.md` in the project root using the [template](./assets/glossary-template.md)
-5. If `GLOSSARY.md` or `CONTEXT.md` already exists, read it first and incorporate
-   new terms without duplicating or contradicting existing definitions
+3. Propose canonical terms — be **opinionated** about term choices
+4. Choose the target:
+   - update `GLOSSARY.md` when it exists
+   - update `CONTEXT.md` when it is the only existing vocabulary artifact
+   - create `GLOSSARY.md` for new projects with neither file
+5. Use the [glossary template](./assets/glossary-template.md) when creating
+   `GLOSSARY.md`
+6. Incorporate new terms without duplicating or contradicting existing
+   definitions
 
 ## Rules
 

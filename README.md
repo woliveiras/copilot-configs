@@ -13,6 +13,7 @@ Every project needs the same Copilot setup: language-specific instructions, code
 **What you get:**
 
 - **Instruction files** auto-applied by file glob for languages, frameworks, testing, and security
+- **AGENTS.md** project contract for agent workflows, artifact locations, and operating rules
 - **4 agents** for spec-driven development: write specs → generate tests → implement code → update docs
 - **Workflow and utility skills** for specs, tests, docs, migrations, ADRs, state management patterns, and commit messages
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
@@ -21,8 +22,11 @@ Every project needs the same Copilot setup: language-specific instructions, code
 ```
 copilot-configs/
 ├── install.sh / uninstall.sh          # Install scripts
-├── user/prompts/                      # Global prompts (review, refactor, test)
+├── user/
+│   ├── copilot-instructions.md        # Global bootstrap that points agents to local AGENTS.md
+│   └── prompts/                       # Global prompts (review, refactor, test)
 └── project/
+    ├── AGENTS.md                      # Project-level operating contract for agents
     ├── mise.toml                      # Tool version management template
     └── .github/
         ├── copilot-instructions.md    # Project-level Copilot instructions
@@ -39,7 +43,8 @@ copilot-configs/
 curl -fsSL https://raw.githubusercontent.com/woliveiras/copilot-configs/main/install.sh | bash
 ```
 
-This clones the repo to `~/.copilot-configs/` and copies global prompts to your VS Code user directory.
+This clones the repo to `~/.copilot-configs/` and copies global prompts plus a
+small Copilot instruction bootstrap to your VS Code user directory.
 
 ## Update
 
@@ -57,7 +62,7 @@ For project-level files, re-run `--project` inside your repo:
 ~/.copilot-configs/install.sh --project
 ```
 
-Managed files (instructions, agents, skills, hooks) are updated to the latest version. Customizable files (`copilot-instructions.md`, `guardrails-rules.txt`) are preserved. Use `--force` to overwrite everything, including customized files.
+Managed files (instructions, agents, skills, hooks) are updated to the latest version. Customizable files (`AGENTS.md`, `copilot-instructions.md`, `guardrails-rules.txt`) are preserved. Use `--force` to overwrite everything, including customized files.
 
 ## Uninstall
 
@@ -97,10 +102,25 @@ Run from inside your project directory.
 
 ### Global (user-level)
 
-Installed to `~/Library/Application Support/Code/User/prompts/` (macOS) or `~/.config/Code/User/prompts/` (Linux).
+Prompts are installed to `~/Library/Application Support/Code/User/prompts/`
+(macOS) or `~/.config/Code/User/prompts/` (Linux).
+
+The global `copilot-instructions.md` bootstrap is installed to the VS Code user
+directory. It is intentionally small: it tells agents to look for `AGENTS.md` in
+the active workspace and follow the project-local file when present.
+Depending on your Copilot client/settings, user-level instruction files may need
+to be referenced from the VS Code custom instructions settings. The project-local
+`AGENTS.md` remains the reliable contract installed into each repository.
+
+Skills can be installed globally as reusable capabilities, but `AGENTS.md`
+should be project-level by default because it contains repository-specific
+paths, workflows, commands, and artifact locations. Any global `AGENTS.md` or
+global instruction should be treated as a template/default, not as the active
+contract for every repository.
 
 | File | Purpose |
 |------|---------|
+| `copilot-instructions.md` | Global bootstrap: find and follow local `AGENTS.md` |
 | `review.prompt.md` | Structured code review checklist |
 | `refactor.prompt.md` | Refactor preserving behavior |
 | `test.prompt.md` | Generate unit tests matching project patterns |
@@ -108,7 +128,17 @@ Installed to `~/Library/Application Support/Code/User/prompts/` (macOS) or `~/.c
 
 ### Project-level
 
-Installed to `.github/` in your project root.
+Installed to the project root and `.github/`.
+
+| File | Purpose |
+|------|---------|
+| `AGENTS.md` | Project operating contract for agents: workflows, artifact paths, skill routing, verification rules |
+| `.github/copilot-instructions.md` | Project overview, conventions, directory structure, and build/test commands |
+
+`AGENTS.md` is the source of truth for agent behavior in a repository. It should
+reference skills instead of duplicating their full procedures.
+`.github/copilot-instructions.md` remains useful for project facts and
+Copilot-wide context.
 
 #### Instructions (`.github/instructions/`)
 
@@ -195,6 +225,20 @@ Recommended organization for future skills:
 | `migrate-react-router` | Step-by-step guide for React Router v6 → v7 migration |
 | `model-state-with-xstate` | XState v5 recipes: React integration, actors, testing |
 | `manage-state-with-zustand` | Zustand v5 recipes: middleware setup, immer, XState sync |
+
+#### Domain Vocabulary
+
+Agents and skills should read domain vocabulary before writing PRDs, specs,
+tests, reviews, bugfix documents, ADRs, or user-facing copy.
+
+`GLOSSARY.md` is the default vocabulary artifact for new projects. `CONTEXT.md`
+is also supported for repositories that already use that convention. If both
+exist, read both; treat `GLOSSARY.md` as the canonical term list and
+`CONTEXT.md` as broader domain context unless the project says otherwise. If
+they conflict, ask before changing either file.
+
+Absence of both files should not block work. Create or update vocabulary only
+when real ambiguity, inconsistent naming, or overloaded domain language appears.
 
 #### Hooks (`.github/hooks/`)
 
@@ -321,9 +365,10 @@ When the feature involves significant design choices, use these before or alongs
 
 All files are meant to be edited. After running `--project`:
 
-1. **Edit `copilot-instructions.md`** — fill in project name, description, directory structure, and build commands
-2. **Add more instructions** — copy from `~/.copilot-configs/project/.github/instructions/`
-3. **Tune guardrails** — add or remove rules in `guardrails-rules.txt`
+1. **Review `AGENTS.md`** — adjust artifact paths, workflow rules, and skill routing for the repository
+2. **Edit `.github/copilot-instructions.md`** — fill in project name, description, directory structure, and build commands
+3. **Add more instructions** — copy from `~/.copilot-configs/project/.github/instructions/`
+4. **Tune guardrails** — add or remove rules in `guardrails-rules.txt`
 
 ## Contributing
 

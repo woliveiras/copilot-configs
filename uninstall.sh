@@ -36,6 +36,19 @@ if [[ -n "$VSCODE_USER_DIR" ]] && [[ -d "$VSCODE_USER_DIR/prompts" ]]; then
   fi
 fi
 
+# Remove global Copilot instruction bootstrap only if it still matches the
+# installed template. Preserve user-customized instruction files.
+if [[ -n "$VSCODE_USER_DIR" ]] \
+  && [[ -f "$VSCODE_USER_DIR/copilot-instructions.md" ]] \
+  && [[ -f "$INSTALL_DIR/user/copilot-instructions.md" ]]; then
+  if diff -q "$INSTALL_DIR/user/copilot-instructions.md" "$VSCODE_USER_DIR/copilot-instructions.md" &>/dev/null; then
+    rm "$VSCODE_USER_DIR/copilot-instructions.md"
+    ok "Removed: $VSCODE_USER_DIR/copilot-instructions.md"
+  else
+    warn "Preserved customized: $VSCODE_USER_DIR/copilot-instructions.md"
+  fi
+fi
+
 # Remove installation directory
 if [[ -d "$INSTALL_DIR" ]]; then
   rm -rf "$INSTALL_DIR"

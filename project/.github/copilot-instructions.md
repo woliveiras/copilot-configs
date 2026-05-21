@@ -2,6 +2,8 @@
 
 > Customize this file for your project. Remove sections that don't apply.
 
+For agent workflows, follow `AGENTS.md` at the workspace root when present.
+
 ## Workflow
 
 This project follows **Spec Driven Development**:

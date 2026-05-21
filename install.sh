@@ -42,6 +42,7 @@ detect_vscode_dir() {
 
 # Files users are expected to customize. Preserved during updates unless --force.
 CUSTOMIZABLE_FILES="
+AGENTS.md
 copilot-instructions.md
 hooks/guardrails-rules.txt
 "
@@ -62,6 +63,20 @@ safe_copy() {
   mkdir -p "$(dirname "$dest")"
   cp "$src" "$dest"
   ok "$action: $dest"
+}
+
+# Copy a customizable file. Existing customized files are preserved unless
+# --force is provided.
+# Usage: safe_copy_customizable <src> <dest> <relative_path>
+safe_copy_customizable() {
+  local src="$1" dest="$2" rel_path="$3"
+  if is_customizable "$rel_path" && [[ -f "$dest" ]] && [[ "$FORCE" == "false" ]]; then
+    if ! diff -q "$src" "$dest" &>/dev/null; then
+      warn "Preserved (customized): $dest"
+    fi
+  else
+    safe_copy "$src" "$dest"
+  fi
 }
 
 # Copy a directory tree. Customizable files are preserved unless --force.
@@ -686,6 +701,9 @@ if [[ "$PROJECT" == "true" ]]; then
 
   info "Applying project template to $(pwd)..."
 
+  # Copy root-level project contract
+  safe_copy_customizable "$INSTALL_DIR/project/AGENTS.md" "./AGENTS.md" "AGENTS.md"
+
   # Copy .github/ template (instructions and skills installed separately based on detection)
   safe_copy_tree "$INSTALL_DIR/project/.github" "./.github" "instructions skills"
 
@@ -760,6 +778,14 @@ else
       [[ -f "$f" ]] || continue
       safe_copy "$f" "$PROMPTS_DIR/$(basename "$f")"
     done
+  fi
+
+  if [[ -f "$INSTALL_DIR/user/copilot-instructions.md" ]]; then
+    info "Installing global Copilot instruction bootstrap..."
+    safe_copy_customizable \
+      "$INSTALL_DIR/user/copilot-instructions.md" \
+      "$VSCODE_USER_DIR/copilot-instructions.md" \
+      "copilot-instructions.md"
   fi
 fi
 
