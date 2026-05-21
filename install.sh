@@ -285,7 +285,8 @@ detect_relevant_instructions() {
 
   # Universal — always included
   files+=("testing.instructions.md")
-  files+=("security.instructions.md")
+  files+=("e2e-testing.instructions.md")
+  files+=("integration-testing.instructions.md")
 
   # Docker
   { [[ -f "Dockerfile" ]] || [[ -f "docker-compose.yml" ]] \
@@ -295,6 +296,8 @@ detect_relevant_instructions() {
   # JavaScript/TypeScript ecosystem
   if [[ -f "package.json" ]]; then
     files+=("typescript.instructions.md")
+    grep -qE '"(react|next|astro|vue|svelte)"' package.json 2>/dev/null && files+=("web-security.instructions.md")
+    grep -qE '"(express|fastify|next|hono|koa|nestjs)"' package.json 2>/dev/null && files+=("api-security.instructions.md")
     grep -q '"react"' package.json 2>/dev/null && files+=("react.instructions.md")
     grep -q '"astro"' package.json 2>/dev/null && files+=("astro-mdx.instructions.md")
     grep -q '"@tanstack/react-query"' package.json 2>/dev/null && files+=("tanstack-query.instructions.md")
@@ -309,15 +312,25 @@ detect_relevant_instructions() {
   # Go
   if [[ -f "go.mod" ]]; then
     files+=("go.instructions.md")
+    files+=("api-security.instructions.md")
     grep -q 'mattn/go-sqlite3' go.mod 2>/dev/null && files+=("sqlite.instructions.md")
   fi
 
   # Python
-  { [[ -f "pyproject.toml" ]] || [[ -f "requirements.txt" ]]; } && files+=("python.instructions.md")
+  if [[ -f "pyproject.toml" ]] || [[ -f "requirements.txt" ]]; then
+    files+=("python.instructions.md")
+    if grep -qi 'fastapi' pyproject.toml requirements.txt 2>/dev/null; then
+      files+=("fastapi.instructions.md")
+      files+=("api-security.instructions.md")
+    elif grep -qiE '(django|flask)' pyproject.toml requirements.txt 2>/dev/null; then
+      files+=("api-security.instructions.md")
+    fi
+  fi
 
   # Kotlin/Java (Android)
   if [[ -f "build.gradle.kts" ]] || [[ -f "build.gradle" ]]; then
     files+=("kotlin.instructions.md")
+    files+=("android-security.instructions.md")
     grep -rqiE '(androidx\.room|sqlite)' . --include='*.gradle*' 2>/dev/null && files+=("sqlite.instructions.md")
   fi
 
@@ -334,7 +347,7 @@ install_instructions() {
 
   # If only universal instructions are detected, keep the install minimal.
   local specific_count
-  specific_count="$(echo "$relevant" | grep -cvxE '(testing|security)\.instructions\.md' || true)"
+  specific_count="$(echo "$relevant" | grep -cvxE '(testing|e2e-testing|integration-testing)\.instructions\.md' || true)"
 
   if [[ "$specific_count" -eq 0 ]]; then
     info "No language/framework detected — installing universal instructions only."

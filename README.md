@@ -151,12 +151,17 @@ examples and recipes.
 |------|-----------|-------|
 | `typescript.instructions.md` | `**/*.ts, **/*.tsx` | Strict mode, interfaces, named exports |
 | `go.instructions.md` | `**/*.go` | Error wrapping, table-driven tests, context |
-| `python.instructions.md` | `**/*.py` | Type hints 3.12+, uv, pytest, structlog |
+| `python.instructions.md` | `**/*.py` | Python language-level conventions |
+| `fastapi.instructions.md` | FastAPI route and API files | Routers, dependency injection, request/response models |
 | `kotlin.instructions.md` | `**/*.kt` | MVVM, Hilt, Room, Compose |
 | `react.instructions.md` | `**/*.tsx, **/*.jsx` | TanStack Query, feature-sliced, a11y |
 | `astro-mdx.instructions.md` | `**/*.mdx, **/*.astro` | Frontmatter, no H1, code fences |
-| `testing.instructions.md` | `**/*.test.*, **/*.spec.*` | AAA pattern, self-contained tests |
-| `security.instructions.md` | `**` | OWASP baseline, no hardcoded secrets |
+| `testing.instructions.md` | test files and test folders | General test design independent of framework |
+| `e2e-testing.instructions.md` | E2E test files and config | User journeys, stable selectors, reliable verification |
+| `integration-testing.instructions.md` | integration test files and folders | Module boundaries and controlled external dependencies |
+| `api-security.instructions.md` | API handlers, controllers, routes, middleware | API input, authorization, logging, abuse controls |
+| `web-security.instructions.md` | browser UI and route components | XSS, redirects, client storage, client/server validation |
+| `android-security.instructions.md` | Android Kotlin and manifest files | Storage, permissions, intents, networking |
 | `docker.instructions.md` | Docker and Compose files | Multi-stage builds, non-root users, no secrets |
 | `react-router.instructions.md` | Route modules | React Router v7 loaders, actions, typegen |
 | `sqlite.instructions.md` | SQL, database Go code, migrations | WAL mode, pragmas, migrations |
