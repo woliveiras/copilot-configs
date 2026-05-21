@@ -9,6 +9,8 @@ applyTo: "**/routers/**/*.py, **/routes/**/*.py, **/api/**/*.py, **/main.py"
 - Use `APIRouter` with explicit `prefix` and `tags`.
 - Use Pydantic models for request bodies and responses; avoid raw `dict`
   contracts at API boundaries.
+- Declare `response_model` when the public response shape differs from the
+  internal object returned by application code.
 - Use `Depends()` for dependencies such as database sessions, auth, settings,
   and service objects.
 - Use `HTTPException` for expected client-facing errors.

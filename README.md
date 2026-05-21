@@ -155,6 +155,9 @@ examples and recipes.
 | `go.instructions.md` | `**/*.go` | Error wrapping, table-driven tests, context |
 | `python.instructions.md` | `**/*.py` | Python language-level conventions |
 | `fastapi.instructions.md` | FastAPI route and API files | Routers, dependency injection, request/response models |
+| `langchain.instructions.md` | LangChain chains, agents, retrievers, and RAG files | Runnables, tools, retrieval, structured outputs, tracing |
+| `langgraph.instructions.md` | LangGraph graph, workflow, and agent files | State schemas, nodes, checkpoints, interrupts, resume |
+| `llm-service.instructions.md` | LLM service and agent integration files | Provider boundary, structured outputs, retries, limits, observability |
 | `kotlin.instructions.md` | `**/*.kt` | MVVM, Hilt, Room, Compose |
 | `react.instructions.md` | `**/*.tsx, **/*.jsx` | TanStack Query, feature-sliced, a11y |
 | `astro-mdx.instructions.md` | `**/*.mdx, **/*.astro` | Frontmatter, no H1, code fences |

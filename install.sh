@@ -329,6 +329,10 @@ detect_relevant_instructions() {
     elif grep -qiE '(django|flask)' pyproject.toml requirements.txt 2>/dev/null; then
       files+=("api-security.instructions.md")
     fi
+    grep -qi 'langchain' pyproject.toml requirements.txt 2>/dev/null && files+=("langchain.instructions.md")
+    grep -qi 'langgraph' pyproject.toml requirements.txt 2>/dev/null && files+=("langgraph.instructions.md")
+    grep -qiE '(openai|anthropic|google-genai|litellm)' pyproject.toml requirements.txt 2>/dev/null \
+      && files+=("llm-service.instructions.md")
   fi
 
   # Kotlin/Java (Android)
