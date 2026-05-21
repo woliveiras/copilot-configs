@@ -1,8 +1,12 @@
 ---
-description: "Quick code review checklist. Use for fast feedback without specs. For spec-driven review, use the @reviewer agent instead."
+description: "Quick code review checklist. Use for fast feedback without specs. For spec-driven review against requirements or acceptance criteria, use the @reviewer agent instead."
 ---
 
-Review the provided code changes using this checklist:
+Review the provided code changes using this quick checklist.
+
+This prompt is for general review when there is no spec-driven workflow in
+scope. If the user asks whether the implementation matches specs, acceptance
+criteria, or tests generated from specs, route them to the `@reviewer` agent.
 
 If a `GLOSSARY.md` or `CONTEXT.md` file exists, use that vocabulary when judging
 names, behavior, and user-facing language.
@@ -26,5 +30,7 @@ names, behavior, and user-facing language.
 - Are there tests for the new/changed behavior?
 - Do tests cover edge cases and error scenarios?
 - Are test names descriptive enough to serve as documentation?
+- If tests look wrong, is there a spec or acceptance criterion that proves the
+  mismatch?
 
 Be specific. Point to exact lines. Suggest concrete alternatives, not vague improvements.
