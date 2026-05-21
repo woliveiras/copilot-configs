@@ -28,7 +28,7 @@ Create an ADR only when all three are true:
 
 Do not create ADRs for obvious, trivial, or easy-to-reverse choices. If the
 decision does not meet the bar, explain that no ADR is needed and suggest where
-the context should live instead, such as a spec, RFC, or code comment.
+the context should live instead, such as a PRD, spec, or code comment.
 
 ## Procedure
 

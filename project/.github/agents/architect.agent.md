@@ -1,5 +1,5 @@
 ---
-description: "Architecture improvement agent based on deep modules. Use when: improving architecture, finding refactoring opportunities, module deepening, tightly-coupled modules, improve architecture, refactoring. Explores the codebase, identifies friction, and proposes module-deepening refactors as RFCs."
+description: "Architecture improvement agent based on deep modules. Use when: improving architecture, finding refactoring opportunities, module deepening, tightly-coupled modules, improve architecture, refactoring. Explores the codebase, identifies friction, and proposes module-deepening refactors as ADRs or implementation plans."
 tools: [read, search, agent]
 ---
 
@@ -69,14 +69,14 @@ hybrid. The user wants a strong read, not a menu.
 Apply [interface-design](./references/interface-design.md) and
 [pragmatic-heuristics](./references/pragmatic-heuristics.md) to evaluate.
 
-### 6. Write RFC or ADR
+### 6. Write ADR or Plan
 
-Ask the user which format they prefer:
+Ask the user which format fits the outcome:
 
-- **RFC** → Save to `docs/rfcs/<topic>.md` using the `generate-rfc` skill format
-- **ADR (MADR)** → Save to `docs/decisions/NNNN-title.md` using the `generate-adr` skill format
+- **ADR (MADR)** → Save to `docs/decisions/NNNN-title.md` using the `generate-adr` skill format when the decision is accepted or ready to accept
+- **Plan** → Save to `plan.md` or a project-local planning path when the work still needs implementation sequencing
 
-Default to RFC for proposals that need review. Use ADR for decisions already agreed upon.
+Default to ADR only for decisions that meet the ADR bar. Use a plan for implementation sequencing.
 
 ## Rules
 
