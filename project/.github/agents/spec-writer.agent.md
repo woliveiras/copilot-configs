@@ -72,7 +72,11 @@ Why this feature exists and what problem it solves.
 | ... | ... | ... |
 ```
 
-Save the spec to `specs/<feature>.md`.
+Save the spec to `specs/YYYY-MM-DD-<feature-slug>.md` by default, using the
+local date when the spec is created. Use
+`specs/YYYY-MM-DD-<feature-slug>/spec.md` only when the feature needs a folder
+for related artifacts such as `plan.md`, `tasks.md`, research notes, or multiple
+specs.
 
 ## Rules
 
