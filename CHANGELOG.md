@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [1.6.0](https://github.com/woliveiras/copilot-configs/compare/v1.5.0...v1.6.0) (2026-05-21)
+
+
+### Features
+
+* add AFK task triage and agent brief skills, update task breakdown and agents documentation ([6e96b1a](https://github.com/woliveiras/copilot-configs/commit/6e96b1ae035f88b27d516d8ba46a75721111e4e4))
+* enhance AFK task guidelines and clarify agent brief requirements ([57c7dca](https://github.com/woliveiras/copilot-configs/commit/57c7dca2059363aee9811f5b98cbaacac9fe8307))
+* update documentation for React Router, Tailwind CSS, XState, Zod, and Zustand conventions ([9aab9f9](https://github.com/woliveiras/copilot-configs/commit/9aab9f9522905460eed351f5eb7cc715c22873b3))
+
 ## [1.5.0](https://github.com/woliveiras/copilot-configs/compare/v1.4.0...v1.5.0) (2026-05-21)
 
 
