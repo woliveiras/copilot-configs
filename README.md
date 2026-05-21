@@ -162,6 +162,11 @@ There are three review surfaces — each for a different context:
 Skills are explicit capabilities. Workflow skills guide multi-step work; utility
 skills provide focused technical recipes or generated artifacts.
 
+Workflow and artifact skills install broadly. Stack-specific recipe skills such
+as `validate-with-zod`, `model-state-with-xstate`, `manage-state-with-zustand`,
+and `migrate-react-router` install only when the matching dependency is detected;
+their core rules live in the matching instruction files.
+
 Recommended organization for future skills:
 
 - `engineering`: PRD, specs, planning, tasks, TDD, bugfix, review, architecture, docs.

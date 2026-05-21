@@ -16,7 +16,7 @@ entire conversation.
    - specs
    - `plan.md`
    - `tasks.md`
-   - ADRs/RFCs
+   - ADRs
    - bugfix documents
    - docs
 3. Summarize:

@@ -14,9 +14,9 @@ Use this when recording a justified design choice — technology, library, patte
 - You're choosing between multiple viable options
 - You want to document a decision that is already accepted
 
-For complex architecture exploration with module-deepening analysis,
-use the `architect` agent instead. For proposing changes (RFC style),
-use the `generate-rfc` skill.
+For complex architecture exploration with module-deepening analysis, use the
+`architect` agent instead. For implementation sequencing, use `plan.md` and
+`tasks.md` instead of an ADR.
 
 ## Before Creating an ADR
 
