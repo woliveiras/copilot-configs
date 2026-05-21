@@ -14,6 +14,10 @@ Before asking any questions, read relevant code to understand the current archit
 existing patterns, and integration points. If the codebase is unfamiliar, use the
 search tool to map the structure first.
 
+If `GLOSSARY.md` or `CONTEXT.md` exists, read it before drafting questions or specs.
+Use the project's domain vocabulary in requirements, acceptance criteria, and
+decision records. If neither file exists, proceed without flagging their absence.
+
 ### 2. Assess scope
 
 If the feature is large (multiple user stories, crosses several layers), break it

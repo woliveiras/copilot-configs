@@ -73,8 +73,8 @@ Apply [interface-design](./references/interface-design.md) and
 
 Ask the user which format they prefer:
 
-- **RFC** → Save to `docs/rfcs/<topic>.md` using the `rfc-template` skill format
-- **ADR (MADR)** → Save to `docs/decisions/NNNN-title.md` using the `adr-template` skill format
+- **RFC** → Save to `docs/rfcs/<topic>.md` using the `generate-rfc` skill format
+- **ADR (MADR)** → Save to `docs/decisions/NNNN-title.md` using the `generate-adr` skill format
 
 Default to RFC for proposals that need review. Use ADR for decisions already agreed upon.
 

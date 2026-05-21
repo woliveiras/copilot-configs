@@ -9,12 +9,13 @@ Code must adapt to them, never the other way around.
 ## Process
 
 1. **Find the spec** — Search for related specs in `specs/`, `docs/`, or the conversation
-2. **Read the tests** — Find tests that cover the changed code
-3. **Verify alignment**:
+2. **Read domain vocabulary** — If `GLOSSARY.md` or `CONTEXT.md` exists, use its terms when evaluating names, tests, and user-facing behavior
+3. **Read the tests** — Find tests that cover the changed code
+4. **Verify alignment**:
    - Do the tests cover every acceptance criterion from the spec?
    - Does the code implement what the tests expect?
    - Are there acceptance criteria without corresponding tests?
-4. **Review the code** against this checklist:
+5. **Review the code** against this checklist:
 
 ### Correctness
 
