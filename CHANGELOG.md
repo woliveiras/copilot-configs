@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [1.5.0](https://github.com/woliveiras/copilot-configs/compare/v1.4.0...v1.5.0) (2026-05-21)
+
+
+### Features
+
+* add LangChain, LangGraph, and LLM service instruction files; update FastAPI conventions and detection logic ([826dcf5](https://github.com/woliveiras/copilot-configs/commit/826dcf502639faf6838da8a7f8cded7eacc8eb8f))
+* add NestJS and Fastify instruction files; update detection logic for relevant instructions ([37c6234](https://github.com/woliveiras/copilot-configs/commit/37c6234c35ec18670364fa83ddb04273fa97b1c3))
+* add new instruction files for Echo, Go Embed, and Air; update README and install script for detection logic ([b185285](https://github.com/woliveiras/copilot-configs/commit/b1852857123d493c35eebda81d1bbad018e4de64))
+* add new skills for Terraform, GCloud, CI/CD workflows, LangGraph agent design, LLM integration review, PostgreSQL query review, Supabase workflow, and ChromaDB RAG workflow ([24cb506](https://github.com/woliveiras/copilot-configs/commit/24cb506e653fa70a212babcb35e4d2c97109d4f4))
+* add new workflow skills for Terraform, GCloud, CI/CD, LLM integration, LangGraph design, Supabase, PostgreSQL, and ChromaDB ([e3e718a](https://github.com/woliveiras/copilot-configs/commit/e3e718a166847b6acb008a814ce56fcbe1730de9))
+* add PostgreSQL, ChromaDB, and Supabase instruction files; update detection logic for relevant instructions ([271009d](https://github.com/woliveiras/copilot-configs/commit/271009de43fd96291d214bd7404410b558f7b4d6))
+* add Pydantic instruction file; update detection logic to include Pydantic instructions ([daf3d0b](https://github.com/woliveiras/copilot-configs/commit/daf3d0b1c095cc967bbf2c66bcfdd8ab2389571e))
+* add SQLite instruction files for Node.js, Go, Python, and Android; update existing SQLite conventions ([7a6a70f](https://github.com/woliveiras/copilot-configs/commit/7a6a70fc6854c7589dc03f383ccb8a1833ee2478))
+* enhance instruction files for Docker, GitHub Actions, GCP, and Terraform; add new conventions and update detection logic ([33b062c](https://github.com/woliveiras/copilot-configs/commit/33b062c487356f290c8c1acac74d0d422676e10d))
+* remove tasks-tech-stack.md to streamline project structure ([0b13c90](https://github.com/woliveiras/copilot-configs/commit/0b13c90c2d0a6171731014b86389debfd805b4d2))
+
 ## [1.4.0](https://github.com/woliveiras/copilot-configs/compare/v1.3.0...v1.4.0) (2026-05-21)
 
 
