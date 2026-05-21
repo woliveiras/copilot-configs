@@ -138,11 +138,14 @@ examples and recipes.
 
 #### Agents (`.github/agents/`)
 
+Agents are narrow roles with a specific output contract. They should route to
+skills for reusable workflows instead of duplicating skill procedures.
+
 | Agent | Role |
 |-------|------|
-| `spec-writer` | Interviews you to produce a structured spec. Detects large scope and breaks into vertical slices. |
-| `explorer` | Read-only codebase mapper. Produces a structured project summary. |
-| `reviewer` | Reviews code against specs and tests as source of truth. |
+| `spec-writer` | Explores requirements and routes to `requirements-interview`, `generate-spec`, and `task-breakdown` conventions. |
+| `explorer` | Read-only codebase mapper with a structured project summary. |
+| `reviewer` | Spec-driven reviewer that checks specs, tests, and code alignment. |
 | `architect` | Multi-design evaluation: explores → candidates → 3 parallel sub-designs → recommends. Saves ADRs or implementation plans. |
 
 Agents reference design heuristics in `.github/agents/references/` (deep modules, interface design, complexity signals, dependency categories, pragmatic heuristics, seam finding).
